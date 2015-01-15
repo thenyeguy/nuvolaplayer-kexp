@@ -40,16 +40,6 @@
     // Create flowplayer API object
     var kexpApi = null;
 
-    function getApi() {
-        // Uses a loop because the API often doesn't connect right away
-        console.log("Loading flowplayer API...")
-        var api = null;
-        while(api == null)
-            api = flowplayer();
-        console.log("API loaded.")
-        return api;
-    }
-
     // Initialization routines
     WebApp._onInitWebWorker = function(emitter)
     {
@@ -77,7 +67,7 @@
         player.setCanGoNext(false);
 
         // Configure API hooks
-        kexpApi = getApi();
+        kexpApi = flowplayer();
         kexpApi.onStart(function(clip) {
             console.log("audio started");
             player.setCanPlay(false);
