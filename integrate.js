@@ -74,7 +74,7 @@
             player.setCanPause(true);
         });
         kexpApi.onStop(function(clip) {
-            console.log("audio started");
+            console.log("audio stopped");
             player.setCanPlay(true);
             player.setCanPause(false);
         });
