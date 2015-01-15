@@ -63,10 +63,13 @@
     // Extract data from the web page
     WebApp.update = function()
     {
+        var track = document.getElementById("track").innerText
+        var artist = document.getElementById("artistname").innerText
+        var album = document.getElementById("album").innerText
         var track = {
-            title: null,
-            artist: null,
-            album: null,
+            title: track,
+            artist: artist,
+            album: album,
             artLocation: null
         }
 
