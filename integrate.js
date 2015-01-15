@@ -95,7 +95,7 @@
 
         // Set default state
         var state = PlaybackState.UNKNOWN;
-        if(flowplayer().isPlaying())
+        if(kexp_api.isPlaying())
         {
             state = PlaybackState.PLAYING;
             player.setCanPlay(false);
@@ -118,6 +118,21 @@
     // Handler of playback actions
     WebApp._onActionActivated = function(emitter, name, param)
     {
+        switch(name)
+        {
+            case PlayerAction.TOGGLE_PLAY:
+                if(kexp_api.isPlaying())
+                    kexp_api.pause();
+                else
+                    kexp_api.play();
+                break;
+            case PlayerAction.PLAY:
+                kexp_api.play();
+                break;
+            case PlayerAction.PAUSE:
+                kexp_api.pause();
+                break;
+        }
     }
 
     WebApp.start();
