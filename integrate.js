@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Michael Nye <thenyeguy@gmail.com>
+ * Copyright 2015 Michael Nye <thenyeguy@gmail.com>
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met: 
@@ -38,7 +38,7 @@
     var WebApp = Nuvola.$WebApp();
 
     // Create flowplayer API object
-    var kexp_api = null;
+    var kexpApi = null;
 
     function get_api() {
         // Uses a loop because the API often doesn't connect right away
@@ -73,7 +73,11 @@
         player.setCanGoPrev(false);
         player.setCanGoNext(false);
 
-        kexp_api = get_api();
+        kexpApi = get_api();
+        console.log("api: " + kexpApi);
+        kexpApi.bind("pause", function(e, api) {
+            // do your thing
+        });
 
         // Start update routine
         this.update();
@@ -95,7 +99,7 @@
 
         // Set default state
         var state = PlaybackState.UNKNOWN;
-        if(kexp_api.isPlaying())
+        if(kexpApi.isPlaying())
         {
             state = PlaybackState.PLAYING;
             player.setCanPlay(false);
@@ -121,16 +125,16 @@
         switch(name)
         {
             case PlayerAction.TOGGLE_PLAY:
-                if(kexp_api.isPlaying())
-                    kexp_api.pause();
+                if(kexpApi.isPlaying())
+                    kexpApi.pause();
                 else
-                    kexp_api.play();
+                    kexpApi.play();
                 break;
             case PlayerAction.PLAY:
-                kexp_api.play();
+                kexpApi.play();
                 break;
             case PlayerAction.PAUSE:
-                kexp_api.pause();
+                kexpApi.pause();
                 break;
         }
     }

@@ -21,5 +21,5 @@ Installation
 Copyright
 ---------
 
-- Copyright 2011-2015 Michael Nye <thenyeguy@gmail.com>
+- Copyright 2015 Michael Nye <thenyeguy@gmail.com>
 - License: [2-Clause BSD-license](./LICENSE)
