@@ -41,25 +41,22 @@
     var kexpApi = null;
 
     function startApi() {
-        console.log("starting api")
+        // Sometimes the API seems to return null rather than an object on the
+        // first call, so we use a timeout callback to attempt again, and only
+        // start the update routine after a success.
         kexpApi = flowplayer();
         if(kexpApi == null)
         {
-            console.log("api start failed");
-            setTimeout(this.startApi.bind(this), 100);
+            setTimeout(startApi, 100);
         }
         else
         {
-            console.log("api started");
-
             // Configure callbacks
             kexpApi.onStart(function(clip) {
-                console.log("audio started");
                 player.setCanPlay(false);
                 player.setCanPause(true);
             });
             kexpApi.onStop(function(clip) {
-                console.log("audio stopped");
                 player.setCanPlay(true);
                 player.setCanPause(false);
             });
@@ -89,7 +86,6 @@
         Nuvola.actions.connect("ActionActivated", this);
 
         // Set default action states
-        console.log("Setting action states")
         player.setCanPlay(false);
         player.setCanPause(false);
         player.setCanGoPrev(false);
@@ -102,7 +98,6 @@
     // Extract data from the web page
     WebApp.update = function()
     {
-        console.log("Updating...");
         // Scrape track info
         var track = document.getElementById("track").innerText;
         var artist = document.getElementById("artistname").innerText;
@@ -114,7 +109,6 @@
             album: album,
             artLocation: art
         };
-        console.log("Track: " + track);
 
         // Set default state
         var state = PlaybackState.UNKNOWN;
@@ -122,20 +116,17 @@
             state = PlaybackState.PLAYING;
         else
             state = PlaybackState.PAUSED;
-        console.log("State: " + state);
 
         player.setTrack(track);
         player.setPlaybackState(state);
 
         // Schedule the next update
-        console.log("Setting timeout");
         setTimeout(this.update.bind(this), 500);
     }
 
     // Handler of playback actions
     WebApp._onActionActivated = function(emitter, name, param)
     {
-        console.log("_onActionActivated: " + name);
         switch(name)
         {
             case PlayerAction.TOGGLE_PLAY:
