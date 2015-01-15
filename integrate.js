@@ -40,11 +40,13 @@
     // Create flowplayer API object
     var kexpApi = null;
 
-    function get_api() {
+    function getApi() {
         // Uses a loop because the API often doesn't connect right away
+        console.log("Loading flowplayer API...")
         var api = null;
         while(api == null)
             api = flowplayer();
+        console.log("API loaded.")
         return api;
     }
 
@@ -68,15 +70,23 @@
         Nuvola.actions.connect("ActionActivated", this);
 
         // Set default action states
+        console.log("Setting action states")
         player.setCanPlay(false);
         player.setCanPause(false);
         player.setCanGoPrev(false);
         player.setCanGoNext(false);
 
-        kexpApi = get_api();
-        console.log("api: " + kexpApi);
-        kexpApi.bind("pause", function(e, api) {
-            // do your thing
+        // Configure API hooks
+        kexpApi = getApi();
+        kexpApi.onStart(function(clip) {
+            console.log("audio started");
+            player.setCanPlay(false);
+            player.setCanPause(true);
+        });
+        kexpApi.onStop(function(clip) {
+            console.log("audio started");
+            player.setCanPlay(true);
+            player.setCanPause(false);
         });
 
         // Start update routine
@@ -86,6 +96,7 @@
     // Extract data from the web page
     WebApp.update = function()
     {
+        console.log("Updating...");
         // Scrape track info
         var track = document.getElementById("track").innerText
         var artist = document.getElementById("artistname").innerText
@@ -96,32 +107,28 @@
             album: album,
             artLocation: null
         }
+        console.log("Track: " + track);
 
         // Set default state
         var state = PlaybackState.UNKNOWN;
         if(kexpApi.isPlaying())
-        {
             state = PlaybackState.PLAYING;
-            player.setCanPlay(false);
-            player.setCanPause(true);
-        }
         else
-        {
             state = PlaybackState.PAUSED;
-            player.setCanPlay(true);
-            player.setCanPause(false);
-        }
+        console.log("State: " + state);
 
         player.setTrack(track);
         player.setPlaybackState(state);
 
         // Schedule the next update
+        console.log("Setting timeout");
         setTimeout(this.update.bind(this), 500);
     }
 
     // Handler of playback actions
     WebApp._onActionActivated = function(emitter, name, param)
     {
+        console.log("_onActionActivated: " + name);
         switch(name)
         {
             case PlayerAction.TOGGLE_PLAY:
