@@ -37,6 +37,17 @@
     // Create new WebApp prototype
     var WebApp = Nuvola.$WebApp();
 
+    // Create flowplayer API object
+    var kexp_api = null;
+
+    function get_api() {
+        // Uses a loop because the API often doesn't connect right away
+        var api = null;
+        while(api == null)
+            api = flowplayer();
+        return api;
+    }
+
     // Initialization routines
     WebApp._onInitWebWorker = function(emitter)
     {
@@ -56,6 +67,14 @@
         // Connect handler for signal ActionActivated
         Nuvola.actions.connect("ActionActivated", this);
 
+        // Set default action states
+        player.setCanPlay(false);
+        player.setCanPause(false);
+        player.setCanGoPrev(false);
+        player.setCanGoNext(false);
+
+        kexp_api = get_api();
+
         // Start update routine
         this.update();
     }
@@ -63,6 +82,7 @@
     // Extract data from the web page
     WebApp.update = function()
     {
+        // Scrape track info
         var track = document.getElementById("track").innerText
         var artist = document.getElementById("artistname").innerText
         var album = document.getElementById("album").innerText
@@ -73,8 +93,23 @@
             artLocation: null
         }
 
+        // Set default state
+        var state = PlaybackState.UNKNOWN;
+        if(flowplayer().isPlaying())
+        {
+            state = PlaybackState.PLAYING;
+            player.setCanPlay(false);
+            player.setCanPause(true);
+        }
+        else
+        {
+            state = PlaybackState.PAUSED;
+            player.setCanPlay(true);
+            player.setCanPause(false);
+        }
+
         player.setTrack(track);
-        player.setPlaybackState(PlaybackState.UNKNOWN);
+        player.setPlaybackState(state);
 
         // Schedule the next update
         setTimeout(this.update.bind(this), 500);
