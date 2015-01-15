@@ -88,15 +88,16 @@
     {
         console.log("Updating...");
         // Scrape track info
-        var track = document.getElementById("track").innerText
-        var artist = document.getElementById("artistname").innerText
-        var album = document.getElementById("album").innerText
+        var track = document.getElementById("track").innerText;
+        var artist = document.getElementById("artistname").innerText;
+        var album = document.getElementById("album").innerText;
+        var art = document.getElementById('albumart').getAttribute('src');
         var track = {
             title: track,
             artist: artist,
             album: album,
-            artLocation: null
-        }
+            artLocation: art
+        };
         console.log("Track: " + track);
 
         // Set default state
