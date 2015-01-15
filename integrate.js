@@ -40,6 +40,35 @@
     // Create flowplayer API object
     var kexpApi = null;
 
+    function startApi() {
+        console.log("starting api")
+        kexpApi = flowplayer();
+        if(kexpApi == null)
+        {
+            console.log("api start failed");
+            setTimeout(this.startApi.bind(this), 100);
+        }
+        else
+        {
+            console.log("api started");
+
+            // Configure callbacks
+            kexpApi.onStart(function(clip) {
+                console.log("audio started");
+                player.setCanPlay(false);
+                player.setCanPause(true);
+            });
+            kexpApi.onStop(function(clip) {
+                console.log("audio stopped");
+                player.setCanPlay(true);
+                player.setCanPause(false);
+            });
+
+            // Start update routine
+            WebApp.update();
+        }
+    }
+
     // Initialization routines
     WebApp._onInitWebWorker = function(emitter)
     {
@@ -67,20 +96,7 @@
         player.setCanGoNext(false);
 
         // Configure API hooks
-        kexpApi = flowplayer();
-        kexpApi.onStart(function(clip) {
-            console.log("audio started");
-            player.setCanPlay(false);
-            player.setCanPause(true);
-        });
-        kexpApi.onStop(function(clip) {
-            console.log("audio stopped");
-            player.setCanPlay(true);
-            player.setCanPause(false);
-        });
-
-        // Start update routine
-        this.update();
+        startApi();
     }
 
     // Extract data from the web page
