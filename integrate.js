@@ -37,35 +37,6 @@
     // Create new WebApp prototype
     var WebApp = Nuvola.$WebApp();
 
-    // Create flowplayer API object
-    var kexpApi = null;
-
-    function startApi() {
-        // Sometimes the API seems to return null rather than an object on the
-        // first call, so we use a timeout callback to attempt again, and only
-        // start the update routine after a success.
-        kexpApi = flowplayer();
-        if(kexpApi == null)
-        {
-            setTimeout(startApi, 100);
-        }
-        else
-        {
-            // Configure callbacks
-            kexpApi.onStart(function(clip) {
-                player.setCanPlay(false);
-                player.setCanPause(true);
-            });
-            kexpApi.onStop(function(clip) {
-                player.setCanPlay(true);
-                player.setCanPause(false);
-            });
-
-            // Start update routine
-            WebApp.update();
-        }
-    }
-
     // Initialization routines
     WebApp._onInitWebWorker = function(emitter)
     {
@@ -92,8 +63,37 @@
         player.setCanGoNext(false);
 
         // Configure API hooks
-        startApi();
+        this.startApi();
     }
+
+    // Loads the KEXP flowplayer API
+    WebApp.startApi = function()
+    {
+        // Sometimes the API seems to return null rather than an object on the
+        // first call, so we use a timeout callback to attempt again, and only
+        // start the update routine after a success.
+        this.kexpApi = flowplayer();
+        if(this.kexpApi == null)
+        {
+            setTimeout(this.startApi.bind(this), 100);
+        }
+        else
+        {
+            // Configure callbacks
+            this.kexpApi.onStart(function(clip) {
+                player.setCanPlay(false);
+                player.setCanPause(true);
+            });
+            this.kexpApi.onStop(function(clip) {
+                player.setCanPlay(true);
+                player.setCanPause(false);
+            });
+
+            // Start update routine
+            this.update();
+        }
+    }
+
 
     // Extract data from the web page
     WebApp.update = function()
@@ -109,15 +109,11 @@
             album: album,
             artLocation: art
         };
+        player.setTrack(track);
 
         // Set default state
-        var state = PlaybackState.UNKNOWN;
-        if(kexpApi.isPlaying())
-            state = PlaybackState.PLAYING;
-        else
-            state = PlaybackState.PAUSED;
-
-        player.setTrack(track);
+        var state = this.kexpApi.isPlaying() ? 
+            PlaybackState.PLAYING : PlaybackState.PAUSED;
         player.setPlaybackState(state);
 
         // Schedule the next update
@@ -130,16 +126,16 @@
         switch(name)
         {
             case PlayerAction.TOGGLE_PLAY:
-                if(kexpApi.isPlaying())
-                    kexpApi.pause();
+                if(this.kexpApi.isPlaying())
+                    this.kexpApi.pause();
                 else
-                    kexpApi.play();
+                    this.kexpApi.play();
                 break;
             case PlayerAction.PLAY:
-                kexpApi.play();
+                this.kexpApi.play();
                 break;
             case PlayerAction.PAUSE:
-                kexpApi.pause();
+                this.kexpApi.pause();
                 break;
         }
     }
