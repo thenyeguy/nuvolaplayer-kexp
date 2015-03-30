@@ -8,7 +8,7 @@ Support
 -------
 
 Report bugs and issues at
-<https://github.com/thenyeguy/nuvolaplayer-kexp/issues>.
+<https://github.com/tiliado/nuvola-app-kexp/issues>.
 
 Installation
 ------------
