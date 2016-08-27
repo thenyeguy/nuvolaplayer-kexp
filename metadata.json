@@ -8,5 +8,6 @@
     "api_major": 3,
     "api_minor": 0,
     "categories": "AudioVideo;Audio;",
-    "home_url": "http://kexp.org/player/LivePlayer.aspx"
+    "home_url": "http://kexp.org/player/LivePlayer.aspx",
+    "license": "2-Clause BSD"
 }
