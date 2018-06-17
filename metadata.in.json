@@ -1,20 +1,21 @@
 {
-    "id": "kexp", 
-    "name": "KEXP Live Stream", 
-    "version_major": 1, 
-    "version_minor": 2, 
-    "api_major": 3, 
-    "api_minor": 0, 
-    "categories": "AudioVideo;Audio;", 
-    "home_url": "http://kexp.org/player/LivePlayer.aspx", 
-    "license": "2-Clause BSD", 
-    "maintainer_name": "Jiří Janoušek",
-    "maintainer_link": "https://github.com/fenryxo",
-    "build": {
-        "icons": [
-            "src/icon.svg SCALABLE 64 128 256", 
-            "src/icon-xs.svg 16 22 24", 
-            "src/icon-sm.svg 32 48"
-        ]
-    }
+  "id": "kexp",
+  "name": "KEXP Radio",
+  "maintainer_name": "Jiří Janoušek",
+  "maintainer_link": "https://github.com/fenryxo",
+  "version_major": 1,
+  "version_minor": 2,
+  "api_major": 4,
+  "api_minor": 11,
+  "categories": "AudioVideo;Audio;",
+  "home_url": "http://kexp.org/listen",
+  "allowed_uri": "^https?://(kexp\\.org/)",
+  "license": "2-Clause BSD",
+  "build": {
+    "icons": [
+      "src/icon.svg SCALABLE 64 128 256",
+      "src/icon-xs.svg 16 22 24",
+      "src/icon-sm.svg 32 48"
+    ]
+  }
 }

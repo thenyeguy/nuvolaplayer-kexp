@@ -6,3 +6,9 @@ eu.tiliado.NuvolaAppKexp.desktop
 kexp.tar.gz
 metadata.json
 nuvola-app-kexp
+/screenshots/
+eu.tiliado.NuvolaAppKexp.service
+eu.tiliado.WebRuntimeAppKexp.appdata.xml
+eu.tiliado.WebRuntimeAppKexp.desktop
+eu.tiliado.WebRuntimeAppKexp.service
+nuvola-app-kexp.metainfo.xml
