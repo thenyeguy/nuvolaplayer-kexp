@@ -1,6 +1,9 @@
 Changelog
 =========
 
+1.3 - June 17th, 2018
+---------------------
+
   * New maintainer: Jiří Janoušek.
   * Ported to Chromium-based backend for audio playback without Flash plugin.
   * Metadata parsing adapted to the new player interface. Issue: tiliado/nuvola-app-kexp#5
