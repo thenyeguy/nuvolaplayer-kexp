@@ -1,8 +1,6 @@
 {
     "id": "kexp", 
     "name": "KEXP Live Stream", 
-    "maintainer_name": "Michael Nye", 
-    "maintainer_link": "https://github.com/thenyeguy", 
     "version_major": 1, 
     "version_minor": 2, 
     "api_major": 3, 
@@ -10,6 +8,8 @@
     "categories": "AudioVideo;Audio;", 
     "home_url": "http://kexp.org/player/LivePlayer.aspx", 
     "license": "2-Clause BSD", 
+    "maintainer_name": "Jiří Janoušek",
+    "maintainer_link": "https://github.com/fenryxo",
     "build": {
         "icons": [
             "src/icon.svg SCALABLE 64 128 256", 

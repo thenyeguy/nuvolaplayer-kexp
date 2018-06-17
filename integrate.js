@@ -1,15 +1,15 @@
 /*
- * Copyright 2015 Michael Nye <thenyeguy@gmail.com>
+ * Copyright 2018 Jiří Janoušek <janousek.jiri@gmail.com>
  *
  * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met: 
- * 
+ * modification, are permitted provided that the following conditions are met:
+ *
  * 1. Redistributions of source code must retain the above copyright notice, this
- *    list of conditions and the following disclaimer. 
+ *    list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution. 
- * 
+ *    and/or other materials provided with the distribution.
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -22,123 +22,39 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-"use strict";
+'use strict';
 
-(function(Nuvola)
-{
+(function (Nuvola) {
+  var PlaybackState = Nuvola.PlaybackState
+  var PlayerAction = Nuvola.PlayerAction
+  var player = Nuvola.$object(Nuvola.MediaPlayer)
+  var WebApp = Nuvola.$WebApp()
 
-    // Create media player component
-    var player = Nuvola.$object(Nuvola.MediaPlayer);
+  WebApp._onInitWebWorker = function (emitter) {
+    Nuvola.WebApp._onInitWebWorker.call(this, emitter)
 
-    // Handy aliases
-    var PlaybackState = Nuvola.PlaybackState;
-    var PlayerAction = Nuvola.PlayerAction;
-
-    // Create new WebApp prototype
-    var WebApp = Nuvola.$WebApp();
-
-    // Initialization routines
-    WebApp._onInitWebWorker = function(emitter)
-    {
-        Nuvola.WebApp._onInitWebWorker.call(this, emitter);
-
-        var state = document.readyState;
-        if (state === "interactive" || state === "complete")
-            this._onPageReady();
-        else
-            document.addEventListener("DOMContentLoaded",
-                    this._onPageReady.bind(this));
+    var state = document.readyState
+    if (state === 'interactive' || state === 'complete') {
+      this._onPageReady()
+    } else {
+      document.addEventListener('DOMContentLoaded', this._onPageReady.bind(this))
     }
+  }
 
-    // Page is ready for magic
-    WebApp._onPageReady = function()
-    {
-        // Connect handler for signal ActionActivated
-        Nuvola.actions.connect("ActionActivated", this);
+  WebApp._onPageReady = function () {
+    Nuvola.actions.connect('ActionActivated', this)
+    this.update()
+  }
 
-        // Set default action states
-        player.setCanPlay(false);
-        player.setCanPause(false);
-        player.setCanGoPrev(false);
-        player.setCanGoNext(false);
+  WebApp.update = function () {
+    // Schedule the next update
+    setTimeout(this.update.bind(this), 500)
+  }
 
-        // Configure API hooks
-        this.startApi();
+  WebApp._onActionActivated = function (emitter, name, param) {
+    switch (name) {
     }
+  }
 
-    // Loads the KEXP flowplayer API
-    WebApp.startApi = function()
-    {
-        // Sometimes the API seems to return null rather than an object on the
-        // first call, so we use a timeout callback to attempt again, and only
-        // start the update routine after a success.
-        this.kexpApi = flowplayer();
-        if(this.kexpApi == null)
-        {
-            setTimeout(this.startApi.bind(this), 100);
-        }
-        else
-        {
-            // Configure callbacks
-            this.kexpApi.onStart(function(clip) {
-                player.setCanPlay(false);
-                player.setCanPause(true);
-            });
-            this.kexpApi.onStop(function(clip) {
-                player.setCanPlay(true);
-                player.setCanPause(false);
-            });
-
-            // Start update routine
-            this.update();
-        }
-    }
-
-
-    // Extract data from the web page
-    WebApp.update = function()
-    {
-        // Scrape track info
-        var track = document.getElementById("track").innerText;
-        var artist = document.getElementById("artistname").innerText;
-        var album = document.getElementById("album").innerText;
-        var art = document.getElementById('albumart').getAttribute('src');
-        var track = {
-            title: track,
-            artist: artist,
-            album: album,
-            artLocation: art
-        };
-        player.setTrack(track);
-
-        // Set default state
-        var state = this.kexpApi.isPlaying() ? 
-            PlaybackState.PLAYING : PlaybackState.PAUSED;
-        player.setPlaybackState(state);
-
-        // Schedule the next update
-        setTimeout(this.update.bind(this), 500);
-    }
-
-    // Handler of playback actions
-    WebApp._onActionActivated = function(emitter, name, param)
-    {
-        switch(name)
-        {
-            case PlayerAction.TOGGLE_PLAY:
-                if(this.kexpApi.isPlaying())
-                    this.kexpApi.pause();
-                else
-                    this.kexpApi.play();
-                break;
-            case PlayerAction.PLAY:
-                this.kexpApi.play();
-                break;
-            case PlayerAction.PAUSE:
-                this.kexpApi.pause();
-                break;
-        }
-    }
-
-    WebApp.start();
-})(this);
+  WebApp.start()
+})(this)  // function(Nuvola)
