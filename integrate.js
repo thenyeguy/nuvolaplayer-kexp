@@ -47,12 +47,59 @@
   }
 
   WebApp.update = function () {
+    var track = {
+      title: Nuvola.queryText('.Player-meta .Player-title span', (title) => title.replace('–', '').trim()),
+      artist: Nuvola.queryText('.Player-meta .Player-title a'),
+      album: Nuvola.queryText('.Player-meta .Player-album'),
+      artLocation: Nuvola.queryAttribute('.Player-coverImage', 'src', (src) => {
+        src = src.trim()
+        if (!src) {
+          return null
+        }
+        if (src.startsWith('/')) {
+          src = window.location.origin + src
+        }
+        return src
+      })
+    }
+    if (track.album && !track.title) {
+      track.title = track.album
+      track.album = null
+    }
+    player.setTrack(track)
+
+    var state = this._getState()
+    player.setPlaybackState(state)
+    player.setCanPlay(state === PlaybackState.PAUSED)
+    player.setCanPause(state === PlaybackState.PLAYING)
+
     // Schedule the next update
     setTimeout(this.update.bind(this), 500)
   }
 
+  WebApp._getPlayButton = function () {
+    return document.querySelector('.Player-ctaButton')
+  }
+
+  WebApp._getState = function () {
+    if (document.querySelector('.Player.Player--playing') && this._getPlayButton()) {
+      return PlaybackState.PLAYING
+    }
+    if (document.querySelector('.Player') && this._getPlayButton()) {
+      return PlaybackState.PAUSED
+    }
+    return PlaybackState.UNKNOWN
+  }
+
   WebApp._onActionActivated = function (emitter, name, param) {
+    var playButton = this._getPlayButton()
     switch (name) {
+      case PlayerAction.TOGGLE_PLAY:
+      case PlayerAction.PLAY:
+      case PlayerAction.PAUSE:
+      case PlayerAction.STOP:
+        Nuvola.clickOnElement(playButton)
+        break
     }
   }
 
