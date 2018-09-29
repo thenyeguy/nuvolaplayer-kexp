@@ -1,4 +1,4 @@
-KEXP Radio • Nuvola Apps Runtime
+KEXP Radio • Nuvola Apps Runtime [![CircleCI](https://circleci.com/gh/tiliado/nuvola-app-kexp/tree/master.svg?style=svg)](https://circleci.com/gh/tiliado/nuvola-app-kexp/tree/master)
 ================================
 
 Integration of KEXP Radio into your linux desktop via
