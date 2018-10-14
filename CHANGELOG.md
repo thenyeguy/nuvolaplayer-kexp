@@ -1,5 +1,7 @@
-Changelog
-=========
+KEXP Radio Changelog
+====================
+
+  * A dark theme variant is used by default.
 
 1.3 - June 17th, 2018
 ---------------------
