@@ -25,15 +25,15 @@
 'use strict';
 
 (function (Nuvola) {
-  var PlaybackState = Nuvola.PlaybackState
-  var PlayerAction = Nuvola.PlayerAction
-  var player = Nuvola.$object(Nuvola.MediaPlayer)
-  var WebApp = Nuvola.$WebApp()
+  const PlaybackState = Nuvola.PlaybackState
+  const PlayerAction = Nuvola.PlayerAction
+  const player = Nuvola.$object(Nuvola.MediaPlayer)
+  const WebApp = Nuvola.$WebApp()
 
   WebApp._onInitWebWorker = function (emitter) {
     Nuvola.WebApp._onInitWebWorker.call(this, emitter)
 
-    var state = document.readyState
+    const state = document.readyState
     if (state === 'interactive' || state === 'complete') {
       this._onPageReady()
     } else {
@@ -47,7 +47,7 @@
   }
 
   WebApp.update = function () {
-    var track = {
+    const track = {
       title: Nuvola.queryText('.Player-meta .Player-title span', (title) => title.replace('–', '').trim()),
       artist: Nuvola.queryText('.Player-meta .Player-title a'),
       album: Nuvola.queryText('.Player-meta .Player-album'),
@@ -68,7 +68,7 @@
     }
     player.setTrack(track)
 
-    var state = this._getState()
+    const state = this._getState()
     player.setPlaybackState(state)
     player.setCanPlay(state === PlaybackState.PAUSED)
     player.setCanPause(state === PlaybackState.PLAYING)
@@ -92,7 +92,7 @@
   }
 
   WebApp._onActionActivated = function (emitter, name, param) {
-    var playButton = this._getPlayButton()
+    const playButton = this._getPlayButton()
     switch (name) {
       case PlayerAction.TOGGLE_PLAY:
       case PlayerAction.PLAY:
@@ -104,4 +104,4 @@
   }
 
   WebApp.start()
-})(this)  // function(Nuvola)
+})(this) // function(Nuvola)
